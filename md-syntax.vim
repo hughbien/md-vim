@@ -21,8 +21,8 @@ syn match mdHeader3         "^\###.*" contains=mdCode,mdBold,mdLink,mdLinkText
 syn match mdHeader4         "^\####.*" contains=mdCode,mdBold,mdLink,mdLinkText
 syn match mdHeader5         "^\#####.*" contains=mdCode,mdBold,mdLink,mdLinkText
 syn match mdHeader6         "^\######.*" contains=mdCode,mdBold,mdLink,mdLinkText
-syn match mdListItem        "^\s*\(+\|-\|*\)"
-syn match mdNumListItem     "^\s*[0-9]\+\."
+syn match mdListItem        "^\s*\(+\|-\|*\)\s"
+syn match mdNumListItem     "^\s*[0-9]\+\.\s"
 syn match mdSeparator       "^===\+\s*$"
 syn match mdSeparator       "^---\+\s*$"
 syn match mdSeparator       "^\*\*\*\+\s*$"
