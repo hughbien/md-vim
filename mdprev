@@ -91,7 +91,7 @@ module MarkdownPreview
   }
   body { text-align: center; font-size: 11.5px; background: #e0e0e0;
     line-height: 1.7em; color: #333; width: 100%; height: 100%; }
-  h1,h2,h3,h4,h5,h6 { font-weight: bold; font-family: myriad pro, sans-serif; }
+  h1,h2,h3,h4,h5,h6 { font-weight: bold; font-family: Copperplate / Copperplate Gothic Light, sans-serif; }
   h1 { margin: 36px 0 24px; color: #111; border-bottom: 1px dashed #aaa; 
     padding-bottom: 6px; font-size: 2.2em; }
   h1 + p, h1 + ol, h1 + ul { margin-top: -12px; }
@@ -111,7 +111,7 @@ module MarkdownPreview
   a:hover { color: #234f32; }
   .fragment-anchor + h1, h1:first-child { margin-top: 0; }
   select, input, textarea { font: 99% lucida grande, helvetica, sans-serif; }
-  pre, code { font-family: monospace; }
+  pre, code { font-family: Lucida Console, Monaco, monospace; }
   ol { list-style: decimal; }
   ul { list-style: disc; }
   ol, ul { margin: 24px 0 24px 1.7em; }
