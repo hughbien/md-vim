@@ -8,7 +8,7 @@ Install
     
 1. cp md-script.vim ~/.vim/scripts/md.vim
 2. cp md-syntax.vim ~/.vim/syntax/md.vim
-3. cp mdprev ~/somewhere/in/path/mdprev
+3. curl -s https://raw.github.com/hughbien/mdprev/HEAD/mdprev.rb > ~/somewhere/in/path/mdprev
 
 To activate the syntax and script on *.md files:
 
