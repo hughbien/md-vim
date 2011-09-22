@@ -28,6 +28,7 @@ Shortcuts
 * `ql` re-numbers ordered lists
 * `qz` folds current file according to headers
 * `qp` preview in browser
+* `qP` preview as PDF
 
 License
 =======
