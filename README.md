@@ -6,19 +6,17 @@ Syntax and keyboard shortcuts for editing Markdown files.
 Install
 =======
     
-1. cp md-script.vim ~/.vim/scripts/md.vim
-2. cp md-syntax.vim ~/.vim/syntax/md.vim
-3. curl -s https://raw.github.com/hughbien/mdprev/HEAD/mdprev.rb > ~/somewhere/in/path/mdprev
+1. `cp md-script.vim ~/.vim/scripts/md.vim`
+2. `cp md-syntax.vim ~/.vim/syntax/md.vim`
+
+For preview support:
+
+    sudo gem install mdprev
 
 To activate the syntax and script on *.md files:
 
     au BufNewFile,BufRead *.md set ft=md
     au Filetype md source ~/.vim/scripts/md.vim
-
-The `mdprev` script may need to be configured.  By default, it uses the `open`
-command to open HTML files:
-
-    OPEN_HTML = 'open'
 
 Shortcuts
 =========
