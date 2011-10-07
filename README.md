@@ -6,17 +6,20 @@ Syntax and keyboard shortcuts for editing Markdown files.
 Install
 =======
     
-1. `cp md-script.vim ~/.vim/scripts/md.vim`
-2. `cp md-syntax.vim ~/.vim/syntax/md.vim`
+If you're using [pathogen https://github.com/tpope/vim-pathogen], drop this
+project under `~/.vim/bundle`.  Otherwise, you'll need to copy some files:
+
+    cp ftplugin/md.vim ~/.vim/ftplugin/md.vim
+    cp syntax/md.vim ~/.vim/ftplugin/md.vim
 
 For preview support:
 
     sudo gem install mdprev
 
-To activate the syntax and script on *.md files:
+To automatically set filetype and load the plugin:
 
+    filetype plugin on  " if you don't already have it
     au BufNewFile,BufRead *.md set ft=md
-    au Filetype md source ~/.vim/scripts/md.vim
 
 Shortcuts
 =========
