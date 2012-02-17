@@ -28,8 +28,8 @@ syn match mdSeparator       "^---\+\s*$"
 syn match mdSeparator       "^\*\*\*\+\s*$"
 syn match mdPreCode         "^    .*"
 
-hi def link mdCode          Identifier
-hi def link mdBold          Constant
+hi def link mdCode          Constant
+hi def link mdBold          Identifier
 hi def link mdLink          Underlined
 hi def link mdLinkText      Statement
 hi def link mdHeader        Identifier
@@ -45,4 +45,4 @@ hi def link mdTableCell     Label
 hi def link mdListItem      Label
 hi def link mdNumListItem   Label
 hi def link mdSeparator     String
-hi def link mdPreCode       Identifier
+hi def link mdPreCode       Constant
