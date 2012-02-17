@@ -1,48 +1,110 @@
-" Language: Markdown
-" Maintainer: Hugh Bien (http://hughbien.com)
+function! MdMakeH1()
+  echo ""
+  call MdMakeHeader("=")
+endfunction
 
-syntax clear
+function! MdMakeH2()
+  echo ""
+  call MdMakeHeader("-")
+endfunction
 
-syn match mdCode            "`[^`]\+`"
-syn match mdBold            "\*\*[^\*]\+\*\*"
-syn match mdBold            "\*[^\*]\+\*"
-syn match mdBold            "_[^_]\+_"
-syn match mdBold            "__[^_]\+__"
-syn match mdLink            "[a-zA-Z]\+://[^ )]\+"
-syn match mdLink            "([a-zA-Z]\+://[^ ]\+)"
-syn match mdLink            "<[a-zA-Z]\+://[^ >]\+>"
-syn match mdLinkText        "\[[^]]*\]"
-syn match mdLinkText        "!\[[^]]*\]"
-syn match mdHeader          /^.\+\n=\+\s*$/ contains=mdCode,mdBold,mdLink,mdLinkText
-syn match mdHeader2         /^.\+\n-\+\s*$/ contains=mdCode,mdBold,mdLink,mdLinkText
-syn match mdHeader          "^\#.*" contains=mdCode,mdBold,mdLink,mdLinkText
-syn match mdHeader2         "^\##.*" contains=mdCode,mdBold,mdLink,mdLinkText
-syn match mdHeader3         "^\###.*" contains=mdCode,mdBold,mdLink,mdLinkText
-syn match mdHeader4         "^\####.*" contains=mdCode,mdBold,mdLink,mdLinkText
-syn match mdHeader5         "^\#####.*" contains=mdCode,mdBold,mdLink,mdLinkText
-syn match mdHeader6         "^\######.*" contains=mdCode,mdBold,mdLink,mdLinkText
-syn match mdListItem        "^\s*\(+\|-\|*\)\s"
-syn match mdNumListItem     "^\s*[0-9]\+\.\s"
-syn match mdSeparator       "^===\+\s*$"
-syn match mdSeparator       "^---\+\s*$"
-syn match mdSeparator       "^\*\*\*\+\s*$"
-syn match mdPreCode         "^    .*"
+function! MdMakeHeader(character)
+  let line = substitute(getline("."), "\\s\\+$", "", "")
+  let nextline = getline(line(".") + 1)
+  let border = substitute(line, ".", a:character, "g")
+  call setline(".", line)
+  if nextline =~ "^" . a:character . "\\+\\s*$"
+    call setline(line(".") + 1, border)
+  else
+    call append(".", border)
+  endif
+endfunction
 
-hi def link mdCode          Constant
-hi def link mdBold          Label
-hi def link mdLink          Underlined
-hi def link mdLinkText      Function
-hi def link mdHeader        String
-hi def link mdHeader2       Todo
-hi def link mdHeader3       Label
-hi def link mdHeader4       Function
-hi def link mdHeader5       Operator
-hi def link mdHeader6       Operator
-hi def link mdTask          Label
-hi def link mdTaskDone      Ignore
-hi def link mdTableBorder   Label
-hi def link mdTableCell     Label
-hi def link mdListItem      Label
-hi def link mdNumListItem   Label
-hi def link mdSeparator     String
-hi def link mdPreCode       Constant
+function! MdFixOrderedList()
+  echo ""
+  let ltop = line(".")
+  while getline(ltop) =~ "^\\s*[0-9]\\+\\." || 
+      \ (getline(ltop) =~ "^\\s" && getline(ltop) !~ "^\\s*$")
+    let ltop = ltop - 1
+  endwhile
+
+  let lbot = line(".")
+  while getline(lbot) =~ "^\\s*[0-9]\\+\\." || 
+      \ (getline(lbot) =~ "^\\s" && getline(lbot) !~ "^\\s*$")
+    let lbot = lbot + 1
+  endwhile
+
+  let ltop = ltop + 1
+  let lbot = lbot - 1
+  if ltop > lbot
+    return
+  endif
+
+  let i = 1
+  let row = ltop
+  while row <= lbot
+    let line = getline(row)
+    if line =~ "^\\s*[0-9]\\+\\."
+      call setline(row, substitute(line, "[0-9]\\+", i, ""))
+      let i = i + 1
+    endif
+    let row = row + 1
+  endwhile
+endfunction
+
+function! MdFoldLevel(lnum)
+  let line = getline(a:lnum)
+  let nextline = getline(a:lnum + 1)
+  if nextline =~ "^=\\+\\s*$"
+    return '>1'
+  elseif nextline =~ "^-\\+\\s*$"
+    return '>2'
+  elseif line =~ "^#"
+    return '>' . strlen(matchstr(line, "^#*"))
+  else
+    let i = a:lnum
+    while i > 0
+      let line = getline(i)
+      let nextline = getline(i + 1)
+      if nextline =~ "^=\\+\\s*$"
+        return '1'
+      elseif nextline =~ "^-\\+\\s*$"
+        return '2'
+      elseif line =~ "^#"
+        return strlen(matchstr(line, "^#*"))
+      endif
+      let i = i - 1
+    endwhile
+    return '0'
+  endif
+endfunction
+
+function! MdFoldText()
+  let line = getline(v:foldstart)
+  let nextline = getline(v:foldstart + 1)
+  if line !~ "^#"
+    if nextline =~ "^="
+      return ("# " . line)
+    elseif nextline =~ "^-"
+      return ("## " . line)
+    endif
+  endif
+  return line
+endfunction
+
+function! MdFold()
+  echo ""
+  set foldenable
+  set foldmethod=expr
+  set foldexpr=MdFoldLevel(v:lnum)
+  set foldtext=MdFoldText()
+  set foldlevel=0
+endfunction
+
+" Shortcuts
+nmap <buffer> q= :call MdMakeH1()<CR>
+nmap <buffer> q- :call MdMakeH2()<CR>
+nmap <buffer> ql :call MdFixOrderedList()<CR>
+nmap <buffer> qz :call MdFold()<CR>
+nmap <buffer> qp :!mdprev %<CR><CR>
+nmap <buffer> qP :!mdprev --pdf %<CR><CR>
