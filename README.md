@@ -35,4 +35,4 @@ License
 =======
 
 Copyright 2011 Hugh Bien, http://hughbien.com.
-Released under MIT License, see LICENSE.md for more info.
+Released under BSD License, see LICENSE.md for more info.
