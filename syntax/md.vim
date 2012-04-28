@@ -27,6 +27,7 @@ syn match mdSeparator       "^===\+\s*$"
 syn match mdSeparator       "^---\+\s*$"
 syn match mdSeparator       "^\*\*\*\+\s*$"
 syn match mdPreCode         "^    .*"
+syn match mdBlockquote      "^\s*>.*"
 
 hi def link mdCode          Constant
 hi def link mdBold          Identifier
@@ -46,3 +47,4 @@ hi def link mdListItem      Label
 hi def link mdNumListItem   Label
 hi def link mdSeparator     String
 hi def link mdPreCode       Constant
+hi def link mdBlockquote    Constant
