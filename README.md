@@ -10,7 +10,7 @@ If you're using [pathogen](https://github.com/tpope/vim-pathogen), drop this
 project under `~/.vim/bundle`.  Otherwise, you'll need to copy some files:
 
     cp ftplugin/md.vim ~/.vim/ftplugin/md.vim
-    cp syntax/md.vim ~/.vim/ftplugin/md.vim
+    cp syntax/md.vim ~/.vim/syntax/md.vim
 
 For preview support:
 
