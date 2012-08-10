@@ -1,6 +1,9 @@
 " Language: Markdown
 " Maintainer: Hugh Bien (http://hughbien.com)
 
+if exists("b:current_syntax")
+  finish
+endif
 syntax clear
 
 syn match mdCode            "`[^`]\+`"
@@ -48,3 +51,5 @@ hi def link mdNumListItem   Label
 hi def link mdSeparator     String
 hi def link mdPreCode       Constant
 hi def link mdBlockquote    Constant
+
+let b:current_syntax = "md"
