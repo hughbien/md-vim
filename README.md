@@ -9,8 +9,8 @@ Install
 If you're using [pathogen](https://github.com/tpope/vim-pathogen), drop this
 project under `~/.vim/bundle`.  Otherwise, you'll need to copy some files:
 
-    cp ftplugin/md.vim ~/.vim/ftplugin/md.vim
-    cp syntax/md.vim ~/.vim/syntax/md.vim
+    $ cp ftplugin/md.vim ~/.vim/ftplugin/md.vim
+    $ cp syntax/md.vim ~/.vim/syntax/md.vim
 
 For preview support:
 
@@ -34,5 +34,5 @@ Shortcuts
 License
 =======
 
-Copyright 2012 Hugh Bien, http://hughbien.com.
+Copyright Hugh Bien, http://hughbien.com.
 Released under BSD License, see LICENSE.md for more info.
