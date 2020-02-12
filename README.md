@@ -1,13 +1,26 @@
 # Summary
 
-Keyboard shortcuts for editing Markdown files.
+Syntax and keyboard shortcuts for editing Markdown files.
 
 # Install
-    
-If you're using [pathogen](https://github.com/tpope/vim-pathogen), drop this
-project under `~/.vim/bundle`.  Otherwise, you'll need to copy a file:
 
-    $ cp ftplugin/markdown.vim ~/.vim/ftplugin/markdown.vim
+If you're using [vim-plug](https://github.com/junegunn/vim-plug), add this
+line to your `~/.vimrc` plugin section:
+
+    Plug 'hughbien/md-vim'
+
+If you're using [Vundle](https://github.com/VundleVim/Vundle.vim), add this
+line to your `~/.vimrc` plugin section:
+
+    Plugin 'hughbien/md-vim'
+    
+If you're using [Pathogen](https://github.com/tpope/vim-pathogen), drop this
+project under `~/.vim/bundle`.
+
+Otherwise, you'll need to copy two files:
+
+    $ cp ftplugin/md.vim ~/.vim/ftplugin/md.vim
+    $ cp syntax/md.vim ~/.vim/syntax/md.vim
 
 For preview support:
 
@@ -15,18 +28,20 @@ For preview support:
 
 To automatically set filetype and load the plugin:
 
-    filetype plugin on  " if you don't already have it
-    au BufNewFile,BufRead *.md set ft=markdown
+    filetype plugin on                     " if you don't already have it
+    au bufnewfile,bufread *.md set ft=md
+    au bufreadpost *.md call md#setup("q") " where q is your leader key
 
 # Shortcuts
 
-* `q=` turns current line into h1
-* `q-` turns current line into h2
-* `ql` re-numbers ordered lists
-* `qt` formats a table
-* `qz` folds current file according to headers
-* `qp` preview in browser
-* `qP` preview as PDF
+* `<leader>=` turns current line into h1
+* `<leader>-` turns current line into h2
+* `<leader>l` re-numbers ordered lists
+* `<leader>x` toggles a task line
+* `<leader>t` formats a table
+* `<leader>z` folds current file according to headers
+* `<leader>p` preview in browser
+* `<leader>P` preview as PDF
 
 # License
 

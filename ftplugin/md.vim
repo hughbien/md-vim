@@ -55,14 +55,12 @@ endfunction
 function! MdFixTable()
   echo ""
   let ltop = line(".")
-  while getline(ltop) =~ "^\\s*\+\[\+\-\]*$" ||
-      \ getline(ltop) =~ "^\\s*\|"
+  while getline(ltop) =~ "^\\s*\|"
     let ltop = ltop - 1
   endwhile
 
   let lbot = line(".")
-  while getline(lbot) =~ "^\\s*\+\[\+\-\]*$" ||
-      \ getline(lbot) =~ "^\\s*\|"
+  while getline(lbot) =~ "^\\s*\|"
     let lbot = lbot + 1
   endwhile
 
@@ -73,20 +71,20 @@ function! MdFixTable()
   endif
 
   let rawTable = map(
-    \ filter(getline(ltop, lbot), "v:val !~ '^\\s*\+\[\+\-\]*$'"),
+    \ getline(ltop, lbot),
     \ "split(substitute(substitute(" .
           \ "v:val, '^\\s\\+', '', ''), '\\s\\+$', '', ''), '|', 1)")
   if len(rawTable) == 0 || len(rawTable[0]) == 0
     return
   endif
 
-  " Trim cells to include only one space on both sides
+  " Trim/expand cells to include exactly one space on both sides
   let table = []
   for rawRow in rawTable
     let row = []
     for cell in rawRow
       call add(row, substitute(substitute(
-        \ cell, "^\\s\\+", " ", ""), "\\s\\+$", " ", ""))
+        \ cell, "^\\s\*", " ", ""), "\\s\*$", " ", ""))
     endfor
     call add(table, row)
   endfor
@@ -104,14 +102,44 @@ function! MdFixTable()
     endfor
   endfor
 
-  " Add whitespace to shorter cells, create whitespace cells as needed
-  for row in table
+  " Add whitespace/hyphens to shorter cells, create whitespace cells as needed
+  for colIndex in range(len(table))
+    let row = table[colIndex]
     for i in range(len(maxlength))
       if i >= len(row)
         call add(row, "")
       endif
       if len(row[i]) < maxlength[i]
-        let row[i] = row[i] . repeat(" ", maxlength[i] - len(row[i]))
+        let spaceCount = maxlength[i] - len(row[i])
+        if strlen(matchstr(row[i], "^\\s*[-:]\\+\\s*$")) > 0 " is this a delimiter cell?
+          let row[i] = row[i][:1] . repeat("-", spaceCount) . row[i][2:]
+        else
+          " find closest delimiter cell to get alignment
+          let delRow = colIndex
+          let align = "left"
+          while delRow >= 0
+            let delCell = table[delRow][i]
+            if strlen(matchstr(delCell, "^\\s*[-:]\\+\\s*$")) > 0
+              if strlen(matchstr(delCell, "^\\s*:")) > 0 && strlen(matchstr(delCell, ":\\s*$")) > 0
+                let align = "center"
+                break
+              elseif strlen(matchstr(delCell, ":\\s*$")) > 0
+                let align = "right"
+                break
+              endif
+            endif
+            let delRow = delRow - 1
+          endwhile
+          if align == "left"
+            let row[i] = row[i] . repeat(" ", spaceCount)
+          elseif align == "right"
+            let row[i] = repeat(" ", spaceCount) . row[i]
+          else
+            let leftSpace = repeat(" ", float2nr(floor(spaceCount/2.0)))
+            let rightSpace = repeat(" ", float2nr(ceil(spaceCount/2.0)))
+            let row[i] = leftSpace . row[i] . rightSpace
+          endif
+        endif
       endif
     endfor
   endfor
@@ -127,10 +155,21 @@ function! MdFixTable()
     else
       call setline(i, substitute(
         \ "|" . join(remove(table, 0), "|") . "|",
-        \ "||", "|", "g"))
+        \ "| |", "|", "g"))
     endif
     let i = i + 1
   endwhile
+endfunction
+
+function! MdToggleTask()
+  echo ""
+  let row = line(".")
+  let line = getline(row)
+  if line =~ "\\[ \\]"
+    call setline(row, substitute(line, "\\[ \\]", "[x]", ""))
+  elseif line =~ "\\[x\\]"
+    call setline(row, substitute(line, "\\[x\\]", "[ ]", ""))
+  endif
 endfunction
 
 function! MdFoldLevel(lnum)
@@ -182,11 +221,13 @@ function! MdFold()
   set foldlevel=0
 endfunction
 
-" Shortcuts
-nmap <buffer> q= :call MdMakeH1()<CR>
-nmap <buffer> q- :call MdMakeH2()<CR>
-nmap <buffer> ql :call MdFixOrderedList()<CR>
-nmap <buffer> qt :call MdFixTable()<CR>
-nmap <buffer> qz :call MdFold()<CR>
-nmap <buffer> qp :!mdprev %<CR><CR>
-nmap <buffer> qP :!mdprev --pdf %<CR><CR>
+function! md#setup(leader)
+  exe "nmap <buffer> " . a:leader . "= :call MdMakeH1()<CR>"
+  exe "nmap <buffer> " . a:leader . "- :call MdMakeH2()<CR>"
+  exe "nmap <buffer> " . a:leader . "l :call MdFixOrderedList()<CR>"
+  exe "nmap <buffer> " . a:leader . "x :call MdToggleTask()<CR>"
+  exe "nmap <buffer> " . a:leader . "t :call MdFixTable()<CR>"
+  exe "nmap <buffer> " . a:leader . "z :call MdFold()<CR>"
+  exe "nmap <buffer> " . a:leader . "p :!mdprev %<CR><CR>"
+  exe "nmap <buffer> " . a:leader . "P :!mdprev --pdf %<CR><CR>"
+endfunction
