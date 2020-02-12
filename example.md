@@ -94,7 +94,11 @@ nostrud exercitation ullamco laboris nisi ut `aliquip ex ea` commodo consequat.
 | header1    | long-header2 | final-header-3 |
 | ---------- | :----------- | -------------: |
 | col1       | col2         |                |
-| longer-col | final-row    |    empty-above |
+| longer-col | _final-row_  |  `empty-above` |
+
+| unexpanded-table | try-formatting-it
+| -- | :- | -: |
+| | data-column | **data-column-2**
 
 Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
 fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in

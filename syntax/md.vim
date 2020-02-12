@@ -43,7 +43,7 @@ syn match mdNumListItem    "^\s*[0-9]\+\.\s"
 syn match mdTableBorder    "^\s*|" contained
 syn match mdTableBorder    "\s|" contained
 syn match mdTableBorder    "\s|\s*$" contained
-syn match mdTableRow       "^\s*|.*|\s*$" contains=mdTableBorder
+syn match mdTableRow       "^\s*|.*|\s*$" contains=mdTableBorder,mdCode,mdItalic,mdBold,mdStrike,mdLink,mdUrl,mdImg
 syn match mdTableHead      "^\s*|[-: |]*|\s*$"
 syn match mdSeparator      "^===\+\s*$"
 syn match mdSeparator      "^---\+\s*$"

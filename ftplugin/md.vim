@@ -111,7 +111,8 @@ function! MdFixTable()
       endif
       if len(row[i]) < maxlength[i]
         let spaceCount = maxlength[i] - len(row[i])
-        if strlen(matchstr(row[i], "^\\s*[-:]\\+\\s*$")) > 0 " is this a delimiter cell?
+        " ^\\s*:\\?-\\{3,}:\\?\\s*$ for minimum 3 dashes
+        if strlen(matchstr(row[i], "^\\s*[-:]\\{2,}\\s*$")) > 0 " is this a delimiter cell?
           let row[i] = row[i][:1] . repeat("-", spaceCount) . row[i][2:]
         else
           " find closest delimiter cell to get alignment
@@ -119,7 +120,7 @@ function! MdFixTable()
           let align = "left"
           while delRow >= 0
             let delCell = table[delRow][i]
-            if strlen(matchstr(delCell, "^\\s*[-:]\\+\\s*$")) > 0
+            if strlen(matchstr(delCell, "^\\s*[-:]\\{2,}\\s*$")) > 0
               if strlen(matchstr(delCell, "^\\s*:")) > 0 && strlen(matchstr(delCell, ":\\s*$")) > 0
                 let align = "center"
                 break
