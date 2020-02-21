@@ -1,3 +1,8 @@
+---
+one: two
+three: four
+---
+
 Sample Markdown Document
 ========================
 
@@ -91,10 +96,10 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
 incididunt ut labore et **dolore magna aliqua**. Ut enim ad minim veniam, quis
 nostrud exercitation ullamco laboris nisi ut `aliquip ex ea` commodo consequat. 
 
-| header1    | long-header2 | final-header-3 |
-| ---------- | :----------- | -------------: |
-| col1       | col2         |                |
-| longer-col | _final-row_  |  `empty-above` |
+| header1       | long-header2 |      header-3 |
+| ------------- | :----------- | ------------: |
+| col1          | col2         |               |
+| longer-col    | _final-row_  | `empty-above` |
 
 | unexpanded-table | try-formatting-it
 | -- | :- | -: |

@@ -51,6 +51,7 @@ syn match mdSeparator      "^\*\*\*\+\s*$"
 syn match mdBlockquote     "^\s*>.*"
 syn match mdPreCode        "^    .*"
 syn region mdPreCode       start="^\s*````*.*$" end="^\s*````*\ze\s*$" keepend
+syn region mdPreCode       start=/\%^+++\s*$/ end=/^+++\s*$/ keepend
 
 " fenced implementation copied from https://github.com/tpope/vim-markdown
 if !exists("g:md_fenced_languages")
@@ -121,3 +122,8 @@ let b:current_syntax = "md"
 if main_syntax ==# "md"
   unlet main_syntax
 endif
+
+" Front-Matter YAML
+unlet b:current_syntax
+syn include @mdYaml syntax/yaml.vim
+syn region mdFrontYaml start=/\%^---\s*$/ end=/^---\s*$/ keepend contains=@mdYaml

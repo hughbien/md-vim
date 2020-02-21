@@ -79,12 +79,18 @@ function! MdFixTable()
   endif
 
   " Trim/expand cells to include exactly one space on both sides
+  " Delimiters are also trimmed to be as long as necessary, but no longer
   let table = []
   for rawRow in rawTable
     let row = []
     for cell in rawRow
-      call add(row, substitute(substitute(
-        \ cell, "^\\s\*", " ", ""), "\\s\*$", " ", ""))
+      let trimmedCell = cell
+      if strlen(matchstr(trimmedCell, "^\\s*[-:]\\{2,}\\s*$")) > 0 " is this a delimiter cell?
+        let trimmedCell = substitute(trimmedCell, "--\*", "--", "") " trim extra dashes
+      endif
+      let trimmedCell = substitute(trimmedCell, "^\\s\*", " ", "") " trim leading whitespace
+      let trimmedCell = substitute(trimmedCell, "\\s\*$", " ", "") " trim trailing whitespace
+      call add(row, trimmedCell)
     endfor
     call add(table, row)
   endfor
@@ -117,8 +123,12 @@ function! MdFixTable()
         else
           " find closest delimiter cell to get alignment
           let delRow = colIndex
+          if delRow + 1 < len(table)
+            let delRow = delRow + 1 " also include on row below, in case this is a header
+          endif
+
           let align = "left"
-          while delRow >= 0
+          while delRow >= 0 " keep searching one cell up until delimiter is found
             let delCell = table[delRow][i]
             if strlen(matchstr(delCell, "^\\s*[-:]\\{2,}\\s*$")) > 0
               if strlen(matchstr(delCell, "^\\s*:")) > 0 && strlen(matchstr(delCell, ":\\s*$")) > 0
@@ -176,10 +186,21 @@ endfunction
 function! MdFoldLevel(lnum)
   let line = getline(a:lnum)
   let nextline = getline(a:lnum + 1)
-  if nextline =~ "^=\\+\\s*$"
+  if a:lnum == 1 && (line =~ "^---\s*$" || line =~ "^+++\s*$")
+    return '>1'
+  elseif nextline =~ "^=\\+\\s*$"
     return '>1'
   elseif nextline =~ "^-\\+\\s*$"
-    return '>2'
+    if getline(1) =~ "^---\s*$" " is this frontmatter yaml ending?
+      let i = a:lnum - 1
+      while i > 1
+        if getline(i) =~ "^---\s*$"
+          return '>2'
+        endif
+        let i = i - 1
+      endwhile
+    endif
+    return '1' " this is frontmatter yaml ending line
   elseif line =~ "^#"
     return '>' . strlen(matchstr(line, "^#*"))
   else
@@ -187,10 +208,21 @@ function! MdFoldLevel(lnum)
     while i > 0
       let line = getline(i)
       let nextline = getline(i + 1)
-      if nextline =~ "^=\\+\\s*$"
+      if i == 1 && (line =~ "^---\s*$" || line =~ "^+++\s*$")
+        return '1'
+      elseif nextline =~ "^=\\+\\s*$"
         return '1'
       elseif nextline =~ "^-\\+\\s*$"
-        return '2'
+        if getline(1) =~ "^---\s*$" " is this frontmatter yaml ending?
+          let prev = i - 1
+          while prev > 1
+            if getline(prev) =~ "^---\s*$"
+              return '2'
+            endif
+            let prev = prev - 1
+          endwhile
+        endif
+        return '1'
       elseif line =~ "^#"
         return strlen(matchstr(line, "^#*"))
       endif
