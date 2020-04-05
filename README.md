@@ -22,9 +22,7 @@ Otherwise, you'll need to copy two files:
     $ cp ftplugin/md.vim ~/.vim/ftplugin/md.vim
     $ cp syntax/md.vim ~/.vim/syntax/md.vim
 
-For preview support:
-
-    sudo gem install mdprev
+For preview support, install [mark](https://github.com/hughbien/mark).
 
 To automatically set filetype and load the plugin:
 
@@ -41,7 +39,6 @@ To automatically set filetype and load the plugin:
 * `<leader>t` formats a table
 * `<leader>z` folds current file according to headers
 * `<leader>p` preview in browser
-* `<leader>P` preview as PDF
 
 # License
 

@@ -261,6 +261,5 @@ function! md#setup(leader)
   exe "nmap <buffer> " . a:leader . "x :call MdToggleTask()<CR>"
   exe "nmap <buffer> " . a:leader . "t :call MdFixTable()<CR>"
   exe "nmap <buffer> " . a:leader . "z :call MdFold()<CR>"
-  exe "nmap <buffer> " . a:leader . "p :!mdprev %<CR><CR>"
-  exe "nmap <buffer> " . a:leader . "P :!mdprev --pdf %<CR><CR>"
+  exe "nmap <buffer> " . a:leader . "p :!mark %<CR><CR>"
 endfunction
